@@ -31,6 +31,8 @@ while True:
     except ValueError as err:
         print(err)
 
+print("the inputed numbers: %s" % numbers)
+
 swapped = True
 while swapped:
     swapped = False
@@ -42,6 +44,8 @@ while swapped:
             numbers[index] = numbers[index + 1]
             numbers[index + 1] = temp
             swapped = True
+            
+print("the swapped numbers is: %s" % numbers)
 
 index = int(len(numbers) / 2)
 median = numbers[index]

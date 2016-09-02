@@ -8,7 +8,7 @@ import urllib
 import gzip
 import re
 from xml import etree
-import sys
+
 from html.parser import HTMLParser
 
 class MyHTMLParser(HTMLParser):

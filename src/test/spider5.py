@@ -3,8 +3,10 @@ Created on 2016年5月31日
 
 @author: gionee
 '''
+import bs4
+from bs4 import BeautifulSoup
 import urllib
-url = 'http://www.baidu.com/'
+url = 'http://trend.caipiao.163.com/ssq/#from=kaijiang'
 req = urllib.request.Request(url,headers={
     'Connection': 'Keep-Alive',
     'Accept': 'text/html, application/xhtml+xml, */*',
@@ -14,4 +16,22 @@ req = urllib.request.Request(url,headers={
 
 oper = urllib.request.urlopen(req)
 data = oper.read()
-print(data.decode())
+#print(data.decode())
+
+soup = BeautifulSoup(data)
+print(soup.title)
+table_html=soup.find('tbody', attrs={"id": "cpdata"})
+#print(table_html)
+
+tr_list = soup.select("tbody > tr")
+for tr in tr_list:
+    soup = BeautifulSoup(str(tr))
+    td_list = soup.find_all('td')
+    
+    for td in td_list:
+        print(td)
+        
+    print("=============================华丽的分割线=============================%s" % len(td_list))
+    
+print(len(tr_list))
+
