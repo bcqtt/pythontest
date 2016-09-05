@@ -40,9 +40,6 @@ def grabing(url):
             if soup.find(class_="ball_red") or soup.find(class_="ball_brown") or soup.find(class_="ball_blue") :
                 result_list.append(soup.getText())
             
-        #print("=============================华丽的分割线=============================%s" % len(td_list))
-        #print(result)
-    
         dbbean = mysql_utils.DBBean()
         cursor = dbbean.getCursor()
         if len(result_list)>0 and ifExist(result_list[0])==0:
@@ -52,8 +49,6 @@ def grabing(url):
             dbbean.conn.commit();
             
         dbbean.closeCursor()
-    
-    print("保存数据库完毕")
 
 
 # 判断期号是否存在
@@ -63,9 +58,27 @@ def ifExist(_id):
     sql = "select count(*) num from two_color_balls where id='%s'" % _id
     cursor.execute(sql)
     data = cursor.fetchone()
-    print("第%s期结果已经存在，无需再保存。" % _id)
+    dbbean.closeCursor()
     return data['num']
+
+# 判断url是否被访问过了
+def isVisited(url):
+    dbbean = mysql_utils.DBBean()
+    cursor = dbbean.getCursor()
+    sql = "select count(*) num from visited_site where url='%s'" % url
+    cursor.execute(sql)
+    _data = cursor.fetchone()
     
+    if _data['num']==0:
+        sql = "insert into visited_site(url) values('%s')" % url
+        cursor.execute(sql)
+        dbbean.conn.commit();
+        dbbean.closeCursor()
+        return False
+    else :
+        print("%s 已经访问过，不再访问。" % url)
+        dbbean.closeCursor()
+        return True
     
 #ifExist('2004011')
 
@@ -74,6 +87,11 @@ url = 'http://trend.caipiao.163.com/ssq/?year=%s'
 
 year = 2004
 while year<=2016:
-    grabing(url % year)
+    print("正在爬取%s年数据，请耐心等待。" % year)
+    if not isVisited(url % year):
+        grabing(url % year)
+    
     year+=1
+    
+print("保存数据库完毕")
     
