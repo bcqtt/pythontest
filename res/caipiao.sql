@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `two_color_balls` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在导出表  caipiao.two_color_balls 的数据：~0 rows (大约)
+-- 正在导出表  caipiao.two_color_balls 的数据：~1,913 rows (大约)
 /*!40000 ALTER TABLE `two_color_balls` DISABLE KEYS */;
 INSERT INTO `two_color_balls` (`id`, `red1`, `red2`, `red3`, `red4`, `red5`, `red6`, `bull`) VALUES
 	('2004001', '1', '2', '3', '7', '10', '25', '7'),
@@ -1947,6 +1947,33 @@ INSERT INTO `two_color_balls` (`id`, `red1`, `red2`, `red3`, `red4`, `red5`, `re
 	('2016102', '5', '8', '10', '14', '17', '30', '13'),
 	('2016103', '1', '5', '13', '19', '24', '27', '11');
 /*!40000 ALTER TABLE `two_color_balls` ENABLE KEYS */;
+
+
+-- 导出  表 caipiao.visited_site 结构
+DROP TABLE IF EXISTS `visited_site`;
+CREATE TABLE IF NOT EXISTS `visited_site` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `url` varchar(200) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COMMENT='已经访问过的url';
+
+-- 正在导出表  caipiao.visited_site 的数据：~0 rows (大约)
+/*!40000 ALTER TABLE `visited_site` DISABLE KEYS */;
+INSERT INTO `visited_site` (`id`, `url`) VALUES
+	(1, 'http://trend.caipiao.163.com/ssq/?year=2004'),
+	(2, 'http://trend.caipiao.163.com/ssq/?year=2005'),
+	(3, 'http://trend.caipiao.163.com/ssq/?year=2006'),
+	(4, 'http://trend.caipiao.163.com/ssq/?year=2007'),
+	(5, 'http://trend.caipiao.163.com/ssq/?year=2008'),
+	(6, 'http://trend.caipiao.163.com/ssq/?year=2009'),
+	(7, 'http://trend.caipiao.163.com/ssq/?year=2010'),
+	(8, 'http://trend.caipiao.163.com/ssq/?year=2011'),
+	(9, 'http://trend.caipiao.163.com/ssq/?year=2012'),
+	(10, 'http://trend.caipiao.163.com/ssq/?year=2013'),
+	(11, 'http://trend.caipiao.163.com/ssq/?year=2014'),
+	(12, 'http://trend.caipiao.163.com/ssq/?year=2015'),
+	(13, 'http://trend.caipiao.163.com/ssq/?year=2016');
+/*!40000 ALTER TABLE `visited_site` ENABLE KEYS */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
