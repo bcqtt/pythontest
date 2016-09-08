@@ -31,3 +31,14 @@ def extract_from_tag2(tag,line):
 
 line = extract_from_tag2("div", initline)
 print("第二种方法：%s" % line)
+
+
+list = [1,2,3,4,5,6]
+print(list.pop(0))
+print(list.pop(0))
+print(list.pop(0))
+print(list.pop(0))
+print(list.pop(0))
+print(list.pop(0))
+
+

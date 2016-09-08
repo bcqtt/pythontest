@@ -4,7 +4,7 @@ Created on 2016年5月31日
 @author: gionee
 '''
 from bs4 import BeautifulSoup
-from db import mysql_utils
+from db import mysqlutils
 import urllib
 
 # 抓取数据并且入库
@@ -40,7 +40,7 @@ def grabing(url):
             if soup.find(class_="ball_red") or soup.find(class_="ball_brown") or soup.find(class_="ball_blue") :
                 result_list.append(soup.getText())
             
-        dbbean = mysql_utils.DBBean()
+        dbbean = mysqlutils.DBBean()
         cursor = dbbean.getCursor()
         if len(result_list)>0 and ifExist(result_list[0])==0:
             print("执行SQL： " + sql % ','.join(result_list))
@@ -53,7 +53,7 @@ def grabing(url):
 
 # 判断期号是否存在
 def ifExist(_id):
-    dbbean = mysql_utils.DBBean()
+    dbbean = mysqlutils.DBBean()
     cursor = dbbean.getCursor()
     sql = "select count(*) num from two_color_balls where id='%s'" % _id
     cursor.execute(sql)
@@ -63,7 +63,7 @@ def ifExist(_id):
 
 # 判断url是否被访问过了
 def isVisited(url):
-    dbbean = mysql_utils.DBBean()
+    dbbean = mysqlutils.DBBean()
     cursor = dbbean.getCursor()
     sql = "select count(*) num from visited_site where url='%s'" % url
     cursor.execute(sql)
