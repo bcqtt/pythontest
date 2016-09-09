@@ -13,7 +13,7 @@ data_list = [(1, 2, 3, 4, 5, 6, 1),
 (1, 2, 3, 4, 5, 6, 3),
 (1, 2, 3, 4, 5, 6, 3),
 (1, 2, 3, 4, 5, 6, 4)]
-data_list = operation.createCombin()
+#data_list = operation.createCombin()
 
 init_length = len(data_list)
 print(init_length)
@@ -25,6 +25,26 @@ temple = 0
 counter = 0
 step = 10000
 
+def saveData(threadName,data,step):
+    
+    len_of_data = len(data)
+    num = operation.initArgs(len_of_data, step)
+    
+    for i in range(num):
+        sql='insert into results(red1,red2,red3,red4,red5,red6,blue,prize) values '
+        val_str = str(data[step*i:step*i+step])
+        val_str = val_str.replace("[","").replace("]",";")
+        sql = sql + val_str 
+        #print("保存数据： " + sql)
+        dbbean = mysqlutils.DBBean()
+        cursor = dbbean.getCursor()
+        cursor.execute(sql)
+        dbbean.conn.commit();
+        dbbean.closeCursor()
+        i+=step
+    print("%s 保存数据完毕执行完毕。" % threadName)
+
+#========================================================================= 
 
 def getPiece(data_list,temple,counter,sql):
     if temple<=100:
@@ -53,7 +73,7 @@ def getPiece(data_list,temple,counter,sql):
             raise
     
 
-getPiece(data_list,temple,counter,sql)
+#getPiece(data_list,temple,counter,sql)
         
 dbbean.closeCursor()
 
