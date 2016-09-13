@@ -121,7 +121,7 @@ def initArgs(length,step):
         num = length//step
     return num
 
-#integrateCombin()
+integrateCombin()
 
 # com_list = createCombin()
 # print(len(com_list))
