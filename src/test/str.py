@@ -33,12 +33,6 @@ line = extract_from_tag2("div", initline)
 print("第二种方法：%s" % line)
 
 
-list = [1,2,3,4,5,6]
-print(list.pop(0))
-print(list.pop(0))
-print(list.pop(0))
-print(list.pop(0))
-print(list.pop(0))
-print(list.pop(0))
+print(" 对应的字符为", chr("\x0cO\xc4a\xca\xd9"))
 
 

@@ -5,7 +5,7 @@ Created on 2016年9月6日
 '''
 # 运算组合公式的结果：从m个数字中任选n个的组合个数，公式为 result = 33！/(6!*(33-6)!)
 import itertools
-from caipiao.db import mysqlutils
+import math
 
 #求阶乘
 def getFac(n):
@@ -121,7 +121,32 @@ def initArgs(length,step):
         num = length//step
     return num
 
-integrateCombin()
+
+def getProbability():
+    i=1;
+    n=33;
+    prob = []
+    while i<=6:
+        prob.append(1/n)
+        n-=1
+        i+=1
+    
+    prob.append(1/16)
+    print(prob)
+    return prob
+
+def getEntropy():
+    prob = getProbability()
+    entropy = 0.0
+    for p in prob:
+        entropy -= p*math.log(p, 2)
+    
+    print("信息熵为：%s" % entropy)
+    
+
+
+#integrateCombin()
+getEntropy()
 
 # com_list = createCombin()
 # print(len(com_list))
