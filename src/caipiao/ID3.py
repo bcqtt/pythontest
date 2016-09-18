@@ -33,12 +33,11 @@ def getSummer():
 
 
 # red1 求先验熵
-def prioriEntropy():
-    sql = "select red1, count(red1) as coun from two_color_balls group by red1"
+def prioriEntropy(num):
+    sql = "select red%s, count(red%s) as coun from two_color_balls group by red%s;" % (num,num,num) 
     dbbean = mysqlutils.DBBean()
     cursor = dbbean.getCursor()
     r1 = []
-    p_r1 = []
     p_r1_u_list = []
     cursor.execute(sql)
     data = cursor.fetchall()
@@ -47,57 +46,56 @@ def prioriEntropy():
     summer = getSummer()
     h_r1 = 0.0
     for row in data :
-        r1.append(row['red1'])
+        r1.append(row['red' + str(num)])
         p_r1_u = row['coun']/summer
         p_r1_u_list.append(p_r1_u)
         h_r1 -= p_r1_u*math.log(p_r1_u,2)
         #print("%s : %s : %s" % (row['red1'], row['coun'],row['coun']/summer))
     
     entropy = Entropy(r1,h_r1,None,None)
-    print("H(red1)=%s bit" % h_r1)
+    #print("H(red1)=%s bit" % h_r1)
     return entropy
 
-# 对red2求后验熵
-def posteriorEntropy():
-    sql = "select red2, count(red2) as coun from two_color_balls group by red2"
-    dbbean = mysqlutils.DBBean()
-    cursor = dbbean.getCursor()
-    p_r2 = []
-    p_r2_u_list = []
-    cursor.execute(sql)
-    data = cursor.fetchall()
+# 求信息增益
+def informationGain(number,num):
+    ent = prioriEntropy(num)
+    for num in number:
+        sql = "select red%s, count(red%s) as coun from two_color_balls group by red%s;" % (num,num,num)
+        
+        dbbean = mysqlutils.DBBean()
+        cursor = dbbean.getCursor()
+        p_r_u_list = []
+        cursor.execute(sql)
+        data = cursor.fetchall()
+        
+        summer = getSummer()
+        h_red = []
+        h_uv = 0.0  #条件熵
+        for row in data :
+            p_r_u = row['coun']/summer
+            p_r_u_list.append(p_r_u)
+            
+            #red2的后验熵
+            huv = 0.0
+            for r in ent.r:
+                sql = "select count(*) as coun from two_color_balls where red1=%s and red%s=%s ;" % (r,num,row['red'+str(num)])
+                cursor.execute(sql)
+                data = cursor.fetchone()
+                puv = data['coun']/summer
+                #print("值的后验概率：%s : %s : %s" % (r,r2,puv))
+                if puv == 0:
+                    continue
+                else :
+                    huv -= puv*math.log(puv,2)
+            #print("值的后验熵：%s : %s " % (r2,huv))
+            h_red.append(huv)
+            
+            #red2的条件熵
+            h_uv += p_r_u*huv
+        # red2的信息增益
+        I_red = ent.H-h_uv
+        print("red%s的信息增益：%s" % (num,I_red))
     
-    ent = prioriEntropy()
-    summer = getSummer()
-    r2 = 0.0
-    h_red2 = []
-    h_uv = 0.0  #条件熵
-    for row in data :
-        r2=row['red2']
-        p_r2_u = row['coun']/summer
-        p_r2_u_list.append(p_r2_u)
-        
-        #red2的后验熵
-        huv = 0.0
-        for r in ent.r:
-            sql = "select count(*) as coun from two_color_balls where red1=%s and red2=%s ;" % (r,row['red2'])
-            cursor.execute(sql)
-            data = cursor.fetchone()
-            puv = data['coun']/summer
-            #print("值的后验概率：%s : %s : %s" % (r,r2,puv))
-            if puv == 0:
-                continue
-            else :
-                huv -= puv*math.log(puv,2)
-        #print("值的后验熵：%s : %s " % (r2,huv))
-        h_red2.append(huv)
-        
-        #red2的条件熵
-        h_uv += p_r2_u*huv
-    # red2的信息增益
-    I_red2 = ent.H-h_uv
-    print("red2的信息增益：%s" % I_red2)
+        dbbean.closeCursor()
 
-    dbbean.closeCursor()
-
-posteriorEntropy()
+informationGain((2,3,4,5,6),1)
