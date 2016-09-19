@@ -4,7 +4,7 @@
 继续练习！
 
 # 用到的python库如下
-'''
+```
 C:\Windows\System32>pip list
 beautifulsoup4 (4.5.1)
 cycler (0.10.0)
@@ -23,4 +23,4 @@ pytz (2016.6.1)
 scipy (0.18.0)
 setuptools (27.2.0)
 six (1.10.0)
-'''
+```
