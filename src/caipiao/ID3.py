@@ -98,4 +98,4 @@ def informationGain(number,num):
     
         dbbean.closeCursor()
 
-informationGain((2,3,4,5,6),1)
+informationGain((1,2,3,4,5),6)
