@@ -7,6 +7,7 @@ import numpy as np
 import operator
 import matplotlib
 import matplotlib.pyplot as plt
+from os import listdir
 
 def createDataSet():
     group = np.array([[1.0,1.1],[1.0,1.0],[0,0],[0,0.1]])
@@ -36,7 +37,7 @@ def classify0(inX, dataSet, labels, k):
 def file2matrix(filename):
     fr = open(filename)
     numberOfLines = len(fr.readlines())
-    returnMat = np.zeros((numberOfLines,3))  #zeros()创建数组或者矩阵，元素值全为0
+    returnMat = np.zeros((numberOfLines,3))  #zeros(行数,列数)创建数组或者矩阵，元素值全为0
     classLabelVector = []
     
     fr = open(filename)
@@ -98,6 +99,50 @@ def classifyPerson():
     classifierResult = classify0((inArr - minVals)/ranges,normMat,datingLabels,3)
     print("这个人属于:" , classifierResult)
     
+    
+def img2vector(filename):
+    returnVect = np.zeros((1,1024))
+    fr = open(filename)
+    for i in range(32):
+        lineStr = fr.readline()
+        for j in range(32):
+            returnVect[0,32*i+j] = int(lineStr[j])
+    return returnVect
+
+def handwritingClassTest():
+    hwLabels = []
+    test_dirpath = 'E:\\4.开发书籍\\machinelearninginaction\\Ch02\\testDigits'
+    traning_dirpath = 'E:\\4.开发书籍\\machinelearninginaction\\Ch02\\trainingDigits'
+    trainingFileList = listdir(traning_dirpath)
+    m = len(trainingFileList)
+    trainingMat = np.zeros((m,1024))
+    for i in range(m):
+        fileNameStr = trainingFileList[i]
+        fileStr = fileNameStr.split('.')[0]
+        classNumStr = int(fileStr.split('_')[0])
+        hwLabels.append(classNumStr)
+        trainingMat[i,:] = img2vector('%s/%s' % (traning_dirpath,fileNameStr))
+   
+    testFileList = listdir(test_dirpath)
+    errorCount = 0.0
+    mTest = len(testFileList)
+    for i in range(mTest):
+        fileNameStr = testFileList[i]
+        fileStr = fileNameStr.split('.')[0] 
+        classNumStr = int(fileStr.split('_')[0])
+        vectorUnderTest = img2vector('%s/%s' % (test_dirpath,fileNameStr))
+        classifierResult = classify0(vectorUnderTest, trainingMat, hwLabels, 3)
+        print("识别结果为: %d, 正确结果为: %d" % (classifierResult, classNumStr))
+        if (classifierResult != classNumStr): 
+            errorCount += 1.0
+            
+    print("识别错误总数为: %d" % errorCount)
+    print("错误率为: %f" % (errorCount/float(mTest)))
+          
 #showChart(datingDataMat)
 #datingClassTest()
-classifyPerson()
+#classifyPerson()
+# data = img2vector("E:\\4.开发书籍\\machinelearninginaction\\Ch02\\testDigits\\0_13.txt")
+# print(data[0,0:31])
+# print(data[0,32:63])
+handwritingClassTest()
