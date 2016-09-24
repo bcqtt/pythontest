@@ -6,6 +6,7 @@ Created on 2016年5月31日
 from bs4 import BeautifulSoup
 from db import mysqlutils
 import urllib
+import time
 
 # 抓取数据并且入库
 def grabing(url):
@@ -62,23 +63,28 @@ def ifExist(_id):
     return data['num']
 
 # 判断url是否被访问过了
-def isVisited(url):
+def isVisited(url,year):
+    url = url % year;
     dbbean = mysqlutils.DBBean()
     cursor = dbbean.getCursor()
     sql = "select count(*) num from visited_site where url='%s'" % url
     cursor.execute(sql)
     _data = cursor.fetchone()
     
-    if _data['num']==0:
-        sql = "insert into visited_site(url) values('%s')" % url
-        cursor.execute(sql)
-        dbbean.conn.commit();
-        dbbean.closeCursor()
+    current_year = int(time.strftime('%Y',time.localtime(time.time())))
+    if year != current_year:
+        if _data['num']==0:
+            sql = "insert into visited_site(url) values('%s')" % url
+            cursor.execute(sql)
+            dbbean.conn.commit();
+            dbbean.closeCursor()
+            return False
+        else :
+            print("%s 已经访问过，不再访问。\n" % url)
+            dbbean.closeCursor()
+            return True
+    else:
         return False
-    else :
-        print("%s 已经访问过，不再访问。\n" % url)
-        dbbean.closeCursor()
-        return True
     
 #ifExist('2004011')
 
@@ -88,7 +94,7 @@ url = 'http://trend.caipiao.163.com/ssq/?year=%s'
 year = 2004
 while year<=2016:
     print("正在爬取%s年数据，请耐心等待。" % year)
-    if not isVisited(url % year):
+    if not isVisited(url,year):
         grabing(url % year)
     
     year+=1
