@@ -24,3 +24,6 @@ scipy (0.18.0)
 setuptools (27.2.0)
 six (1.10.0)
 ```
+
+#生成决策树如图
+![image](https://github.com/bcqtt/pythontest/raw/master/res/decision_tree.png)
