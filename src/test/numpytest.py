@@ -4,6 +4,9 @@ a = np.array([1, 2, 3, 4])
 b = np.array((5, 6, 7, 8))
 c = np.array([[1, 2, 3, 4],[4, 5, 6, 7], [7, 8, 9, 10]])
 
+cc = c.shape[1]
+print(cc)
+
 print(c.dtype)
 
 #数组大小由 shape属性获得

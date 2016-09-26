@@ -5,13 +5,14 @@ Created on 2016年9月22日
 '''
 import math
 import operator
+from mechinelearing import treePlotter
 def createDataSet():
-    dataSet = [[1,1,'yes'],
-               [1,1,'yes'],
-               [1,0,'no'],
-               [0,1,'no'],
-               [0,1,'no']]
-    labels = ['不露出水面的','有鳍的']
+    dataSet = [[1,1,'是'],
+               [1,1,'是'],
+               [1,0,'否'],
+               [0,1,'否'],
+               [0,1,'否']]
+    labels = ['能飞的','有羽毛的']
     return dataSet, labels
 
 def calcShannonEnt(dataSet):
@@ -47,10 +48,11 @@ def chooseBestFeatureToSplit(dataSet):
     bestFeature = -1
     for i in range(numFeatures):
         featList = [example[i] for example in dataSet]
-        uniqueVals = set(featList)
+        uniqueVals = set(featList)  #值去重
         newEntropy = 0.0
         for value in uniqueVals:
-            subDataSet = splitDataSet(dataSet, i, value)
+            #有多少个值就有多少个维度
+            subDataSet = splitDataSet(dataSet, i, value)   
             prob = len(subDataSet)/float(len(dataSet)) 
             newEntropy += prob * calcShannonEnt(subDataSet)
         infoGain = baseEntropy - newEntropy   
@@ -86,9 +88,29 @@ def createTree(dataSet,labels):
         myTree[bestFeatLabel][value] = createTree(splitDataSet(dataSet, bestFeat, value),subLabels)
          
     return myTree
+
+def classify(inputTree,featLabels,testVec):
+    firstStr = list(inputTree.keys())[0]
+    secondDict = inputTree[firstStr]
+    featIndex = featLabels.index(firstStr)     
+    for key in secondDict.keys():
+        if testVec[featIndex] == key:
+            if type(secondDict[key]).__name__=='dict':
+                classLabel = classify(secondDict[key],featLabels,testVec)
+            else:   classLabel = secondDict[key]
+    return classLabel
           
 myDat,labels = createDataSet()
 #print(calcShannonEnt(myDat))
 #print(splitDataSet(myDat, 0, 1))
 # print(chooseBestFeatureToSplit(myDat))
-print(createTree(myDat, labels))
+#print(createTree(myDat, labels))
+#myTree = treePlotter.retrieveTree(0)
+#print(classify(myTree,labels,[1,1]))
+
+# 实验案例
+# fr=open('E:\\4.开发书籍\\machinelearninginaction\\Ch03\\lenses.txt')
+# lenses=[inst.strip().split('\t') for inst in fr.readlines()]
+# lensesLabels=['age', 'prescript', 'astigmatic', 'tearRate']
+# lensesTree = createTree(lenses,lensesLabels)
+# treePlotter.createPlot2(lensesTree)
