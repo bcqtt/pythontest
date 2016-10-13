@@ -21,13 +21,13 @@ def makeMyOpener(head = {
     return opener
 
 def saveFile(data):
-    save_path = "F:\\temp.html"
+    save_path = "F:\\data.html"
     f_obj = open(save_path,'wb')
     f_obj.write(data)
     f_obj.close()
 
 oper = makeMyOpener()
-uop = oper.open('http://www.baidu.com/', timeout = 1000)
+uop = oper.open('http://finance.yahoo.com/currency-converter/#from=USD;to=CNY;amt=1', timeout = 1000)
 data = uop.read()
 print(data.decode())
 saveFile(data)
